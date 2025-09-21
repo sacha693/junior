@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>國中生活指南：你的專屬通關秘笈</title>
+    <title>國中冒險指南：你的專屬通關秘笈</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -12,21 +12,41 @@
         .main-header, .main-footer { text-align: center; background-color: #4a90e2; color: white; padding: 2rem 1rem; }
         .main-header h1 { margin: 0; }
         .main-footer { background-color: #333; margin-top: 2rem; }
-        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .container { max-width: 960px; /* 稍微加寬容器以容納並排卡片 */ margin: 2rem auto; padding: 0 1rem; }
         .section-block { background-color: white; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .tools-container { display: flex; flex-direction: column; gap: 1.5rem; }
-        .tool-card { background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-left: 5px solid #4a90e2; }
+        .tools-container { display: flex; flex-direction: column; /* 預設垂直排列 (手機優先) */ gap: 1.5rem; }
+        .tool-card { 
+            display: flex; /* 啟用 flexbox 讓內容更好排版 */
+            flex-direction: column; /* 讓卡片內容垂直排列 */
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            border-left: 5px solid #4a90e2; 
+        }
+        .tool-content { flex-grow: 1; /* 讓內容區塊填滿剩餘空間，對齊等高卡片底部 */ }
         .tool-card h3 { margin-top: 0; color: #4a90e2; }
         .tool-content h4 { margin-top: 1.5rem; color: #333; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
         .tool-content p { margin-bottom: 0.5rem; }
         strong { color: #d9534f; }
+
+        /* --- 響應式設計：針對大螢幕的調整 --- */
+        /* 當螢幕寬度大於等於 768px (例如平板、電腦) 時 */
+        @media (min-width: 768px) {
+            .tools-container {
+                /* 將排列方向改為水平 */
+                flex-direction: row;
+                align-items: stretch; /* 讓三張卡片高度相同，版面更整齊 */
+            }
+        }
+
     </style>
 </head>
 <body>
 
     <header class="main-header">
-        <h1>國中生活指南：你的專屬通關秘笈</h1>
-        <p>嗨，勇敢的冒險家！你即將踏入一塊名為「國中」的升級場域。這份指南，就是為你量身打造的冒險工具箱，讓你學會如何運用你的能力，並在這個新世界中找到你的位置。</p>
+        <h1>國中冒險指南：你的專屬通關秘笈</h1>
+        <p>嗨，勇敢的冒險家！你即將踏入一塊名為「國中」的全新地圖。這份指南，就是為你量身打造的冒險工具箱，讓你學會如何運用你的超能力，並在這個新世界中找到你的位置。</p>
     </header>
     
     <main class="container">
@@ -37,7 +57,7 @@
 
         <section class="section-block">
             <h2>第二關：裝備你的冒險工具箱</h2>
-            <p>進入國中這個升級場域，你需要為自己裝備三樣必備的法寶，它們能幫助你在面對各種挑戰時，保護好自己的程式，並順利過關。點擊下方法寶，查看你的通關秘笈！</p>
+            <p>進入國中這張地圖，你需要為自己裝備三樣必備的法寶，它們能幫助你在面對各種挑戰時，保護好自己的程式，並順利過關。點擊下方法寶，查看你的通關秘笈！</p>
         </section>
 
         <section class="tools-container">
