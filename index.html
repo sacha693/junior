@@ -12,34 +12,54 @@
         .main-header, .main-footer { text-align: center; background-color: #4a90e2; color: white; padding: 2rem 1rem; }
         .main-header h1 { margin: 0; }
         .main-footer { background-color: #333; margin-top: 2rem; }
-        .container { max-width: 960px; /* 稍微加寬容器以容納並排卡片 */ margin: 2rem auto; padding: 0 1rem; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
         .section-block { background-color: white; padding: 1.5rem; margin-bottom: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .tools-container { display: flex; flex-direction: column; /* 預設垂直排列 (手機優先) */ gap: 1.5rem; }
-        .tool-card { 
-            display: flex; /* 啟用 flexbox 讓內容更好排版 */
-            flex-direction: column; /* 讓卡片內容垂直排列 */
+        
+        /* --- 互動式選單樣式 --- */
+        .tools-nav {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 1.5rem;
+        }
+        .tool-tab {
+            flex: 1;
+            padding: 1rem 0.5rem;
+            border: none;
+            background-color: transparent;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #888;
+            cursor: pointer;
+            text-align: center;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tool-tab:hover {
+            color: #4a90e2;
+        }
+        .tool-tab.active {
+            color: #4a90e2;
+            border-bottom-color: #4a90e2;
+        }
+
+        /* --- 法寶卡片樣式調整 --- */
+        .tool-card {
+            display: none; /* 預設隱藏所有卡片 */
             background-color: white; 
             padding: 1.5rem; 
             border-radius: 8px; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
             border-left: 5px solid #4a90e2; 
         }
-        .tool-content { flex-grow: 1; /* 讓內容區塊填滿剩餘空間，對齊等高卡片底部 */ }
+        .tool-card.active {
+            display: block; /* 只顯示有 'active' 類別的卡片 */
+        }
+
         .tool-card h3 { margin-top: 0; color: #4a90e2; }
         .tool-content h4 { margin-top: 1.5rem; color: #333; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; }
         .tool-content p { margin-bottom: 0.5rem; }
         strong { color: #d9534f; }
-
-        /* --- 響應式設計：針對大螢幕的調整 --- */
-        /* 當螢幕寬度大於等於 768px (例如平板、電腦) 時 */
-        @media (min-width: 768px) {
-            .tools-container {
-                /* 將排列方向改為水平 */
-                flex-direction: row;
-                align-items: stretch; /* 讓三張卡片高度相同，版面更整齊 */
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -57,49 +77,48 @@
 
         <section class="section-block">
             <h2>第二關：裝備你的冒險工具箱</h2>
-            <p>進入國中這張地圖，你需要為自己裝備三樣必備的法寶，它們能幫助你在面對各種挑戰時，保護好自己的程式，並順利過關。點擊下方法寶，查看你的通關秘笈！</p>
-        </section>
+            <p>進入國中這張地圖，你需要為自己裝備三樣必備的法寶，它們能幫助你在面對各種挑戰時，保護好自己的程式，並順利過關。點擊下方選單，查看你的通關秘笈！</p>
+            
+            <nav class="tools-nav">
+                <button class="tool-tab active" data-target="tool1">法寶一：提問耳機</button>
+                <button class="tool-tab" data-target="tool2">法寶二：界線藥水</button>
+                <button class="tool-tab" data-target="tool3">法寶三：平衡任務卡</button>
+            </nav>
 
-        <section class="tools-container">
-            <div class="tool-card" data-tool="tool1">
-                <h3>法寶一：提問耳機</h3>
-                <div class="tool-content">
-                    <p>這副耳機能幫助你聽懂別人的語言，跨越人與人之間想法的隔閡。它提醒我們，溝通不是猜測，而是理解。</p>
-                    
-                    <h4>通關秘笈 1：勇敢提問，化解誤會</h4>
-                    <p>當你不明白同學的話語或行為時，與其在心裡猜測，不如直接、有禮貌地提問。例如：「<strong>你說的那個是什麼意思？</strong>」或「<strong>你可以再說得清楚一點嗎？</strong>」這就像按下「即時翻譯」鍵，能幫助你正確解讀訊息，也讓別人更了解你。</p>
-                    
-                    <h4>通關秘笈 2：拆解任務，降低難度</h4>
-                    <p>面對龐大的功課或考試範圍，將它拆解成許多小任務。例如：「<strong>先完成五題數學題</strong>」、「<strong>整理十分鐘的筆記</strong>」，這會讓挑戰變得更容易駕馭，一步步累積成就感。</p>
+            <div class="tools-container">
+                <div class="tool-card active" data-tool="tool1">
+                    <h3>法寶一：提問耳機</h3>
+                    <div class="tool-content">
+                        <p>這副耳機能幫助你聽懂別人的語言，跨越人與人之間想法的隔閡。它提醒我們，溝通不是猜測，而是理解。</p>
+                        <h4>通關秘笈 1：勇敢提問，化解誤會</h4>
+                        <p>當你不明白同學的話語或行為時，與其在心裡猜測，不如直接、有禮貌地提問。例如：「<strong>你說的那個是什麼意思？</strong>」或「<strong>你可以再說得清楚一點嗎？</strong>」這就像按下「即時翻譯」鍵，能幫助你正確解讀訊息，也讓別人更了解你。</p>
+                        <h4>通關秘笈 2：拆解任務，降低難度</h4>
+                        <p>面對龐大的功課或考試範圍，將它拆解成許多小任務。例如：「<strong>先完成五題數學題</strong>」、「<strong>整理十分鐘的筆記</strong>」，這會讓挑戰變得更容易駕馭，一步步累積成就感。</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="tool-card" data-tool="tool2">
-                <h3>法寶二：界線藥水</h3>
-                <div class="tool-content">
-                    <p>這瓶藥水能夠幫助你在感到「過熱」或「當機」時，快速恢復。它是你保護內在程式穩定運作的關鍵，能為你創造一個安全的緩衝空間。</p>
-                    
-                    <h4>通關秘笈 1：辨識「過熱」的警訊</h4>
-                    <p>當周圍的聲音、光線或人際互動讓你感到煩躁、疲憊時，這就是身體在告訴你：「<strong>我需要休息一下了！</strong>」學會辨識這些訊號，才能及時自我照顧。</p>
-
-                    <h4>通關秘笈 2：創造獨處的「冷卻」空間</h4>
-                    <p>感到壓力時，<strong>主動找一個安靜的角落</strong>，讓自己暫時抽離。短暫的獨處能讓你的思緒和情緒重新恢復平靜與秩序。</p>
-                    
-                    <h4>通關秘笈 3：溫和且堅定地表達你的需求</h4>
-                    <p>當你感到社交壓力過大時，溫和地告訴別人：「<strong>我現在需要一些安靜的時間。</strong>」這不是退出遊戲，而是為了讓你更好地繼續玩下去。這也是在教導別人如何與你互相尊重地相處。</p>
+                <div class="tool-card" data-tool="tool2">
+                    <h3>法寶二：界線藥水</h3>
+                    <div class="tool-content">
+                        <p>這瓶藥水能夠幫助你在感到「過熱」或「當機」時，快速恢復。它是你保護內在程式穩定運作的關鍵，能為你創造一個安全的緩衝空間。</p>
+                        <h4>通關秘笈 1：辨識「過熱」的警訊</h4>
+                        <p>當周圍的聲音、光線或人際互動讓你感到煩躁、疲憊時，這就是身體在告訴你：「<strong>我需要休息一下了！</strong>」學會辨識這些訊號，才能及時自我照顧。</p>
+                        <h4>通關秘笈 2：創造獨處的「冷卻」空間</h4>
+                        <p>感到壓力時，<strong>主動找一個安靜的角落</strong>，讓自己暫時抽離。短暫的獨處能讓你的思緒和情緒重新恢復平靜與秩序。</p>
+                        <h4>通關秘笈 3：溫和且堅定地表達你的需求</h4>
+                        <p>當你感到社交壓力過大時，溫和地告訴別人：「<strong>我現在需要一些安靜的時間。</strong>」這不是退出遊戲，而是為了讓你更好地繼續玩下去。這也是在教導別人如何與你互相尊重地相處。</p>
+                    </div>
                 </div>
-            </div>
 
-            <div class="tool-card" data-tool="tool3">
-                <h3>法寶三：平衡任務卡</h3>
-                <div class="tool-content">
-                    <p>這張卡片能引導你找到專屬於你的「隱藏任務」。這些任務不是為了別人，而是為了你自己，能讓你暫時離開主線任務的壓力，並為你的心靈補充能量。</p>
-                    
-                    <h4>通關秘笈 1：投入專屬於你的「隱藏任務」</h4>
-                    <p>一定要安排時間給你熱愛的興趣，不論是<strong>投入你最愛的電玩世界、組裝一個精密的模型，或是一個人安靜地閱讀</strong>。這些都是你的「隱藏任務」，能讓你的心找到獨特的秩序與平靜，更是你自信與成就感的重要來源。</p>
-                    
-                    <h4>通關秘笈 2：透過分享，吸引志同道合的夥伴</h4>
-                    <p>當你在這些任務中有所成就時，<strong>試著和別人分享</strong>，這會吸引到更多和你擁有相同「任務目標」的新夥伴。基於共同愛好建立起來的友誼，往往更加真誠、深刻且持久。</p>
+                <div class="tool-card" data-tool="tool3">
+                    <h3>法寶三：平衡任務卡</h3>
+                    <div class="tool-content">
+                        <p>這張卡片能引導你找到專屬於你的「隱藏任務」。這些任務不是為了別人，而是為了你自己，能讓你暫時離開主線任務的壓力，並為你的心靈補充能量。</p>
+                        <h4>通關秘笈 1：投入專屬於你的「隱藏任務」</h4>
+                        <p>一定要安排時間給你熱愛的興趣，不論是<strong>投入你最愛的電玩世界、組裝一個精密的模型，或是一個人安靜地閱讀</strong>。這些都是你的「隱藏任務」，能讓你的心找到獨特的秩序與平靜，更是你自信與成就感的重要來源。</p>
+                        <h4>通關秘笈 2：透過分享，吸引志同道合的夥伴</h4>
+                        <p>當你在這些任務中有所成就時，<strong>試著和別人分享</strong>，這會吸引到更多和你擁有相同「任務目標」的新夥伴。基於共同愛好建立起來的友誼，往往更加真誠、深刻且持久。</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -110,7 +129,34 @@
         <p>如果有任何問題，請隨時找你的「老玩家」（家人、老師或朋友）求助，他們會是你在冒險中最可靠的夥伴。</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // 等待所有 HTML 內容都載入完成後再執行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 取得所有的頁籤按鈕和內容卡片
+            const tabs = document.querySelectorAll('.tool-tab');
+            const cards = document.querySelectorAll('.tool-card');
+
+            // 為每一個頁籤按鈕新增點擊事件監聽
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 取得被點擊按鈕的 data-target 值 (例如 "tool1")
+                    const target = tab.getAttribute('data-target');
+
+                    // --- 第一步：重置所有狀態 ---
+                    // 移除所有按鈕的 'active' 類別
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // 移除所有卡片的 'active' 類別
+                    cards.forEach(c => c.classList.remove('active'));
+
+                    // --- 第二步：設定啟用狀態 ---
+                    // 為被點擊的按鈕加上 'active' 類別
+                    tab.classList.add('active');
+                    // 找到對應的卡片 (data-tool 符合 target 的那張)，並為它加上 'active' 類別
+                    document.querySelector(`.tool-card[data-tool="${target}"]`).classList.add('active');
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>
