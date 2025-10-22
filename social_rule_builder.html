@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社交規則建構器：如果/那麼法則</title>
+    <!-- 載入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 載入 Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* 設定主要字體為思源黑體 (Noto Sans TC) */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #eef2ff; /* 輕柔的藍色背景 */
+        }
+        .rule-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border-radius: 12px; /* 增加圓角 */
+            overflow: hidden; /* 確保邊框和陰影一致 */
+        }
+        .rule-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15), 0 4px 6px -2px rgba(0, 0, 0, 0.08);
+        }
+        .step-block {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .step-icon {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            z-index: 10;
+        }
+        .step-line {
+            position: absolute;
+            left: 15px;
+            top: 32px;
+            bottom: -12px;
+            width: 2px;
+            background-color: #d1d5db; /* gray-300 */
+        }
+        .step-item:last-child .step-line {
+            display: none;
+        }
+        .rule-conclusion {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8 min-h-screen flex flex-col items-center justify-start">
+
+    <div class="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 sm:p-10 border-t-4 border-purple-600 mb-8">
+        
+        <!-- 標題與專業說明 -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-purple-800 flex items-center justify-center">
+                <i data-lucide="blocks" class="w-8 h-8 mr-3 text-purple-600"></i>
+                社交規則建構小工具
+            </h1>
+            <p class="mt-2 text-gray-600 text-sm sm:text-base">
+                將「行為」、「外在線索」與「內在感受」拆開分析，建立精確的社交規則。
+            </p>
+        </header>
+
+        <!-- 規則輸入表單 -->
+        <form id="ruleForm" class="space-y-6 bg-purple-50 p-6 rounded-lg border border-purple-200">
+            <h2 class="text-xl font-bold text-purple-700 mb-4">建立新的「如果/那麼」腳本</h2>
+            
+            <div class="grid md:grid-cols-3 gap-4">
+                
+                <!-- 1. 行為 (A) 輸入：如果我做了什麼 -->
+                <div class="step-block bg-white shadow-md border-l-4 border-purple-500">
+                    <label for="behavior" class="block text-lg font-bold text-gray-700 mb-1">
+                        1. 我的具體行為 (如果我做了...)
+                    </label>
+                    <input type="text" id="behavior" name="behavior" required placeholder="例如：突然大聲批評他的興趣"
+                           class="mt-1 block w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-base">
+                </div>
+
+                <!-- 2. 可觀察朋友行為表現 (B1)：你看到朋友出現的行為 -->
+                <div class="step-block bg-white shadow-md border-l-4 border-red-500">
+                    <label for="observableCue" class="block text-lg font-bold text-gray-700 mb-1">
+                        2. 可觀察線索 (朋友會...)
+                        <span class="text-xs text-red-500 block font-normal">選擇後，步驟 3 將自動對照。</span>
+                    </label>
+                    <select id="observableCue" name="observableCue" required
+                            class="mt-1 block w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500 text-base bg-white">
+                        <!-- 選項由 JS 填充 -->
+                    </select>
+                </div>
+
+                <!-- 3. 抽象感受 (B2)：朋友有可能的心裡感受 -->
+                <div class="step-block bg-white shadow-md border-l-4 border-blue-500">
+                    <label for="abstractEmotion" class="block text-lg font-bold text-gray-700 mb-1">
+                        3. 抽象感受 (代表他心裡...)
+                        <span class="text-xs text-blue-500 block font-normal">可手動調整，但有預設對照。</span>
+                    </label>
+                    <select id="abstractEmotion" name="abstractEmotion" required
+                            class="mt-1 block w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-base bg-white">
+                        <!-- 選項由 JS 填充 -->
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 提交按鈕 -->
+            <button type="submit" 
+                    class="w-full flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-150 ease-in-out">
+                <i data-lucide="arrow-right-circle" class="w-5 h-5 mr-2"></i>
+                產生社交規則腳本
+            </button>
+        </form>
+    </div>
+
+    <!-- 規則列表區塊 -->
+    <div class="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 sm:p-10 border-t-4 border-green-600">
+        <h2 class="text-3xl font-bold text-green-800 mb-6 flex items-center">
+            <i data-lucide="list-checks" class="w-7 h-7 mr-3 text-green-600"></i>
+            我的社交規則清單
+        </h2>
+        
+        <div id="rulesList" class="space-y-6">
+            <!-- 規則腳本將被 JS 插入這裡 -->
+            <p id="emptyMessage" class="text-gray-500 text-center py-4 italic">
+                目前沒有已建立的規則。請在上方表單中建立你的第一條規則！
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 初始化 Lucide Icons
+        lucide.createIcons();
+
+        const ruleForm = document.getElementById('ruleForm');
+        const rulesList = document.getElementById('rulesList');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const observableCueSelect = document.getElementById('observableCue');
+        const abstractEmotionSelect = document.getElementById('abstractEmotion');
+        let ruleCount = 0;
+
+        // 核心優化數據：擴展到約 10 組，並使用更具體的描述
+        // 這些清單是獨立的，孩子可以選擇任何組合來訓練邏輯連結。
+        const cuesList = [
+            '🔥 雙手握拳、臉色很差、講話變大聲 (生氣/憤怒)', 
+            '💧 眼眶泛紅或流淚、頭部向下傾、聲音變小 (難過/傷心)', 
+            '😟 重複操作某物失敗、用力嘆氣、不想再碰 (沮喪/挫折)', 
+            '😨 身體向後縮、手臂環抱胸前、眼睛不敢看前方 (害怕/恐懼)', 
+            '🚶 不想參與、與團體保持距離、回應很簡短 (被忽略/被拒絕)', 
+            '👀 眼神望向遠處、回覆速度慢、頻繁看手錶/周圍 (無助/不被尊重)', 
+            '🤕 用手扶某部位、發出短促的聲音 (疼痛/不舒服)', 
+            '🗣️ 語速加快、使用「你才是...」句型、單手指著你 (自衛/委屈)', 
+            '😳 臉頰泛紅、低頭並用手遮住部分臉、嘗試躲藏 (丟臉/羞恥)', 
+            '🤏 說話聲音小且猶豫、不停發問、手部小動作多 (焦慮/緊張)' 
+        ];
+
+        const emotionsList = [
+            '生氣/憤怒', // 1. Anger
+            '難過/傷心', // 2. Sadness
+            '沮喪/挫折', // 3. Frustration
+            '害怕/恐懼', // 4. Fear
+            '被忽略/被拒絕', // 5. Neglect
+            '不被尊重', // 6. Disrespect
+            '疼痛/不舒服', // 7. Pain
+            '丟臉/羞恥', // 8. Embarrassment
+            '焦慮/緊張', // 9. Anxiety
+            '委屈/不公平' // 10. Injustice
+        ];
+
+        // *** 【優化核心】可觀察線索與抽象感受的對照表 (Cue Value -> Emotion Value) ***
+        // 映射使用清單中的具體描述，不包含括號內的情緒標籤
+        const cueToEmotionMapping = {
+            '🔥 雙手握拳、臉色很差、講話變大聲': '生氣/憤怒',
+            '💧 眼眶泛紅或流淚、頭部向下傾、聲音變小': '難過/傷心',
+            '😟 重複操作某物失敗、用力嘆氣、不想再碰': '沮喪/挫折',
+            '😨 身體向後縮、手臂環抱胸前、眼珠轉動但目光不定': '害怕/恐懼',
+            '🚶 迅速轉身、與團體保持距離、只用單詞回答': '被忽略/被拒絕',
+            '👀 眼神望向遠處、回覆速度慢、頻繁看手錶/周圍': '不被尊重', 
+            '🤕 用手扶某部位、發出短促的聲音 (疼痛/不舒服)': '疼痛/不舒服',
+            '🗣️ 語速加快、使用「你才是...」句型、單手指著你': '委屈/不公平',
+            '😳 臉頰泛紅、低頭並用手遮住部分臉、嘗試躲藏': '丟臉/羞恥',
+            '🤏 說話聲音小且猶豫、不停發問、手部小動作多': '焦慮/緊張'
+        };
+
+
+        // 填充下拉選單
+        function populateSelect(selectElement, optionsList, defaultText) {
+            selectElement.innerHTML = `<option value="" disabled selected>${defaultText}</option>`;
+            optionsList.forEach((item, index) => {
+                const option = document.createElement('option');
+                
+                // 為了正確映射，我們將值設定為不包含括號的精確描述
+                let valueText = item;
+                let displayIndex = index + 1;
+                
+                if (selectElement.id === 'observableCue') {
+                    // 對於線索，值是精確描述，顯示是編號+全部文字
+                    const match = item.match(/(.*)\s\((.*)\)/);
+                    if (match) {
+                        valueText = match[1].trim(); // 值：'🔥 雙手握拳、肩膀緊繃、語氣提高'
+                    }
+                    option.value = valueText;
+                    option.textContent = `${displayIndex}. ${item}`; // 顯示：'1. 🔥 雙手握拳、肩膀緊繃、語氣提高 (生氣/憤怒)'
+                } else {
+                    // 對於情緒，值和顯示都是情緒標籤
+                    option.value = item;
+                    option.textContent = `${displayIndex}. ${item}`;
+                }
+                
+                selectElement.appendChild(option);
+            });
+        }
+        
+        populateSelect(observableCueSelect, cuesList, '請選擇一個你觀察到的反應 (10項)');
+        populateSelect(abstractEmotionSelect, emotionsList, '請選擇對方心裡可能的感受 (10項)');
+
+        // *** 【優化核心】新增事件監聽器：當步驟 2 改變時，自動更新步驟 3 ***
+        observableCueSelect.addEventListener('change', function() {
+            const selectedCue = this.value;
+            const predictedEmotion = cueToEmotionMapping[selectedCue];
+            
+            if (predictedEmotion) {
+                // 自動設置預測的抽象感受
+                abstractEmotionSelect.value = predictedEmotion;
+            } else {
+                // 如果沒有對照，則清空或設置為預設值
+                abstractEmotionSelect.selectedIndex = 0; 
+            }
+        });
+
+
+        // 輔助函數：生成規則卡片 (加入詳細反思內容)
+        function createRuleCard(behavior, observableCue, abstractEmotion) {
+            ruleCount++;
+            const ruleId = `rule-${ruleCount}`;
+
+            const card = document.createElement('div');
+            card.id = ruleId;
+            card.className = 'rule-card bg-white border border-gray-100 shadow-xl';
+
+            // 1. 卡片標題：強調規則編號和主要概念
+            const titleSection = `
+                <div class="bg-purple-600 p-4 text-white flex items-center justify-between">
+                    <h3 class="text-xl font-extrabold flex items-center">
+                        <i data-lucide="hash" class="w-6 h-6 mr-2"></i>
+                        規則 ${ruleCount}：行為 -> 感受分析
+                    </h3>
+                </div>
+            `;
+
+            // 2. 步驟分析區：使用垂直時間軸風格
+            const analysisSection = `
+                <div class="p-6">
+                    <div class="space-y-2">
+                        
+                        <!-- Step 1: 行為 -->
+                        <div class="step-item">
+                            <div class="step-icon bg-purple-500">1</div>
+                            <div class="ml-4 flex-1">
+                                <p class="text-sm font-semibold text-purple-700">如果我做了 (行為 A)：</p>
+                                <p class="text-lg font-bold text-gray-800">「${behavior}」</p>
+                            </div>
+                            <div class="step-line bg-purple-200"></div>
+                        </div>
+
+                        <!-- Step 2: 外在線索 -->
+                        <div class="step-item">
+                            <div class="step-icon bg-red-500">2</div>
+                            <div class="ml-4 flex-1">
+                                <p class="text-sm font-semibold text-red-700">那麼對方會出現 (線索 B1)：</p>
+                                <p class="text-lg font-bold text-gray-800">「${observableCue}」</p>
+                            </div>
+                            <div class="step-line bg-red-200"></div>
+                        </div>
+
+                        <!-- Step 3: 內在感受 -->
+                        <div class="step-item">
+                            <div class="step-icon bg-blue-500">3</div>
+                            <div class="ml-4 flex-1">
+                                <p class="text-sm font-semibold text-blue-700">這代表他心裡感到 (感受 B2)：</p>
+                                <p class="text-lg font-bold text-gray-800">「${abstractEmotion}」</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 3. 內在反思步驟 (新增加的詳細反思內容)
+            const internalReflectionSection = `
+                <div class="px-6 py-4 bg-yellow-50 border-t-2 border-yellow-400">
+                    <h4 class="text-lg font-extrabold text-yellow-700 flex items-center mb-2">
+                        <i data-lucide="lightbulb" class="w-5 h-5 mr-2 text-yellow-600"></i>
+                        內在反思步驟 (Cognitive Restructuring)
+                    </h4>
+                    <div class="space-y-3 text-gray-800">
+                        <p class="text-base leading-relaxed border-l-2 border-yellow-500 pl-2">
+                            <span class="font-bold text-yellow-800">步驟 A: 連結事實：</span>
+                            當我對別人做「${behavior}」時，我觀察到他出現「${observableCue}」的線索。
+                        </p>
+                        <p class="text-base leading-relaxed border-l-2 border-yellow-500 pl-2">
+                            <span class="font-bold text-yellow-800">步驟 B: 推論痛苦：</span>
+                            這個線索通常代表他心裡感到「${abstractEmotion}」。這是一種負面感受嗎？
+                        </p>
+                        <!-- 步驟 C: 強力換位思考 - 強化文字呈現 -->
+                        <p class="text-lg font-semibold leading-relaxed border-l-4 border-yellow-700 pl-3 bg-yellow-100 py-1 rounded-sm shadow-inner">
+                            <span class="font-extrabold text-yellow-900 block mb-1">💡 步驟 C: 強力換位思考 — 建立同理心：</span>
+                            如果換作是我，被「${behavior}」這樣對待，我也會立刻感到「${abstractEmotion}」，<br>
+                            並且會表現出「${observableCue}」的反應。這種負面感受是*非常真實且強烈*的！
+                        </p>
+                        <!-- 結束強化 -->
+                    </div>
+                </div>
+            `;
+
+            // 4. 結論區：超顯眼警示風格
+            const finalActionRuleSection = `
+                <div class="p-6 bg-green-100 border-t-2 border-green-400 rule-conclusion">
+                    <h4 class="text-lg font-extrabold text-green-700 flex items-center mb-2">
+                        <i data-lucide="megaphone" class="w-6 h-6 mr-2 text-green-600"></i>
+                        黃金法則結論 (Final Action Rule)
+                    </h4>
+                    <p class="text-xl sm:text-2xl font-black text-green-800 leading-tight">
+                        &rarr; 因此，為了避免對方出現「${observableCue}」的反應，<br class="hidden sm:inline">
+                        <span class="text-red-600 underline decoration-4 decoration-red-300">我絕不</span>對別人做 「${behavior}」！
+                    </p>
+                </div>
+            `;
+
+            card.innerHTML = titleSection + analysisSection + internalReflectionSection + finalActionRuleSection;
+            return card;
+        }
+
+        // 表單提交處理
+        ruleForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const behavior = document.getElementById('behavior').value.trim();
+            const observableCue = document.getElementById('observableCue').value;
+            const abstractEmotion = document.getElementById('abstractEmotion').value;
+
+            if (!behavior || !observableCue || !abstractEmotion) {
+                console.error("請確保填寫了具體行為並選擇了線索與感受。");
+                return;
+            }
+
+            // 創建並添加到列表
+            const newRuleCard = createRuleCard(behavior, observableCue, abstractEmotion);
+            rulesList.prepend(newRuleCard); // 放在最前面
+
+            // 隱藏空消息
+            emptyMessage.classList.add('hidden');
+            
+            // 清空表單並重新聚焦
+            ruleForm.reset();
+            // 重新填充下拉選單，重置回預設狀態
+            populateSelect(observableCueSelect, cuesList, '請選擇一個你觀察到的反應 (10項)');
+            populateSelect(abstractEmotionSelect, emotionsList, '請選擇對方心裡可能的感受 (10項)');
+            document.getElementById('behavior').focus();
+            
+            // 重新初始化新加載的圖標
+            lucide.createIcons();
+        });
+
+        // 確保初始載入時的圖標
+        window.onload = function() {
+            lucide.createIcons();
+        };
+
+    </script>
+</body>
+</html>
