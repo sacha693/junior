@@ -43,3 +43,60 @@ strong { color: #d9534f; }
         flex-direction: row; /* 將秘笈改為水平排列 */
     }
 }
+/* -------------------------------------- */
+/* 第三關：好用的規劃工具 樣式增強 */
+/* -------------------------------------- */
+
+/* 專案卡片整體風格 (讓它看起來像一本小冊子或裝備欄) */
+.project-card {
+    background-color: #f7f7f7; /* 淺灰色背景 */
+    border: 3px solid #6c757d; /* 深色邊框 */
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 20px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* 輕微陰影，增加立體感 */
+    text-align: center;
+}
+
+.project-card h3 {
+    color: #007bff; /* 藍色標題，具備科技感 */
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+.project-card p {
+    color: #495057;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+/* 按鈕本身 (設計成通關道具的樣式) */
+.project-button {
+    display: inline-block; /* 讓寬度能根據內容調整 */
+    background-color: #ffc107; /* 醒目的黃色，像法寶發光 */
+    color: #343a40; /* 深色文字，易於閱讀 */
+    padding: 12px 25px;
+    margin: 10px 10px;
+    border-radius: 8px; /* 圓角 */
+    text-decoration: none; /* 移除下劃線 */
+    font-weight: 700; /* 加粗 */
+    font-size: 1.1em;
+    transition: all 0.3s ease; /* 平滑過渡效果 */
+    border: 2px solid #e0a800; /* 邊框增加質感 */
+    box-shadow: 0 4px 0 #e0a800; /* 底部陰影製造 3D 按鈕效果 */
+}
+
+/* 滑鼠懸停/點擊效果 (提升互動感，像是啟動法寶) */
+.project-button:hover {
+    background-color: #e0a800; /* 懸停時顏色變深 */
+    color: #ffffff; /* 文字變白色 */
+    transform: translateY(-2px); /* 輕微上浮 */
+    box-shadow: 0 6px 0 #c69500; /* 陰影調整 */
+}
+
+.project-button:active {
+    transform: translateY(2px); /* 點擊時下壓 */
+    box-shadow: 0 2px 0 #c69500; /* 陰影變小 */
+}
